@@ -19,7 +19,7 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public List<PostResponse> getAllPosts(String username) {
+    public List<PostResponse> getAllPosts(Long username) {
         return postRepository.findPost(username).orElseThrow(() -> new RuntimeException("Post not found"));
     }
 

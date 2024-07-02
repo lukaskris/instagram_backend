@@ -56,9 +56,10 @@ public class PostController {
 
 
     @GetMapping
-    public List<PostResponse> getAllPosts(@PathVariable String username, @RequestHeader("Authorization") String token) {
-        String user = jwtService.extractUsername(token);
-        return postService.getAllPosts(user);
+    public List<PostResponse> getAllPosts(@RequestHeader("Authorization") String token) {
+        String username = jwtService.extractUsername(token.replace("Bearer ", ""));
+        User user = userService.getUserByUsername(username);
+        return postService.getAllPosts(user.getId());
     }
 
     @GetMapping("/{id}")
