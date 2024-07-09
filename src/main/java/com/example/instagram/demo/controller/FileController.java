@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Controller
-@RequestMapping("/uploads")
+@RequestMapping("/api/uploads")
 public class FileController {
 
     private static final String UPLOAD_DIR = "uploads";

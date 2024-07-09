@@ -24,6 +24,10 @@ public class LikeService {
         return likeRepository.findById(id).orElse(null);
     }
 
+    public PostLike getLikeByUser(Long userId) {
+        return likeRepository.findLikeByUsername(userId).orElse(null);
+    }
+
     public void deleteLike(Long id) {
         likeRepository.deleteById(id);
     }

@@ -19,12 +19,16 @@ public class PostService {
         return postRepository.save(post);
     }
 
-    public List<PostResponse> getAllPosts(Long username) {
-        return postRepository.findPost(username).orElseThrow(() -> new RuntimeException("Post not found"));
+    public List<PostResponse> getAllPosts(Long userId) {
+        return postRepository.findPost(userId).orElseThrow(() -> new RuntimeException("Post not found"));
     }
 
-    public Post getPostById(Long id) {
-        return postRepository.findById(id).orElse(null);
+    public PostResponse getPostById(Long userId, Long id) {
+        return postRepository.findPost(userId, id).orElse(null);
+    }
+
+    public Post getPostById(Long postId) {
+        return postRepository.findPostById(postId).orElse(null);
     }
 
     public void deletePost(Long id) {

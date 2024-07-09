@@ -35,14 +35,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginDto user) throws AuthenticationException {
+    public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody LoginDto user) throws AuthenticationException {
         User authenticatedUser = authenticationService.authenticate(user);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
 
         LoginResponse loginResponse = new LoginResponse(authenticatedUser.getUsername(), authenticatedUser.getProfilePicture(), jwtToken, jwtService.getExpirationTime());
-
-        return ResponseEntity.ok(loginResponse);
+        ApiResponse<LoginResponse> response = new ApiResponse<>("", loginResponse);
+        return ResponseEntity.ok(response);
     }
 
 }

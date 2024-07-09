@@ -9,6 +9,6 @@ public interface PostResponse {
     Date getCreatedAt();
     Long getTotalLikes();
     Long getTotalComments();
-    Boolean getLikedByUser();
+    int getLikedByUser();
     List<String> getImages();
 }

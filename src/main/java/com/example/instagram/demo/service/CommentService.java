@@ -25,6 +25,10 @@ public class CommentService {
         return commentRepository.findById(id).orElse(null);
     }
 
+    public List<Comment> getCommentByPostId(Long id) {
+        return commentRepository.findByPostId(id).orElse(null);
+    }
+
     public void deleteComment(Long id) {
         commentRepository.deleteById(id);
     }

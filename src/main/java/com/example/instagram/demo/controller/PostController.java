@@ -1,5 +1,6 @@
 package com.example.instagram.demo.controller;
 
+import com.example.instagram.demo.dto.ApiResponse;
 import com.example.instagram.demo.dto.PostResponse;
 import com.example.instagram.demo.model.Image;
 import com.example.instagram.demo.model.Post;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -30,7 +30,7 @@ public class PostController {
     private FileStorageService fileStorageService;
 
     @PostMapping(consumes = {"multipart/form-data"})
-    public Post createPost(
+    public ApiResponse<Post> createPost(
             @RequestPart("user") String username,
             @RequestPart("content") String content,
             @RequestPart("images") List<MultipartFile> images) {
@@ -51,16 +51,19 @@ public class PostController {
             imageEntities.add(image);
         }
         post.setImages(imageEntities);
-
-        return postService.savePost(post);
+        Post postResponse = postService.savePost(post);
+        ApiResponse<Post> response = new ApiResponse<>("", postResponse);
+        return response;
     }
 
 
     @GetMapping
-    public List<PostResponse> getAllPosts(@RequestHeader("Authorization") String token) {
+    public ApiResponse<List<PostResponse>> getAllPosts(@RequestHeader("Authorization") String token) {
         String username = jwtService.extractUsername(token.replace("Bearer ", ""));
         User user = userService.getUserByUsername(username);
-        return postService.getAllPosts(user.getId());
+        List<PostResponse> postResponse = postService.getAllPosts(user.getId());
+        ApiResponse<List<PostResponse>> response = new ApiResponse<>("", postResponse);
+        return response;
     }
 
     @GetMapping("/{id}")
