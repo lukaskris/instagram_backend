@@ -12,16 +12,37 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+
     @Query(value = "SELECT p.id as postId, p.content as content, p.created_at as createdAt, " +
             "COUNT(DISTINCT l.id) as totalLikes, COUNT(DISTINCT c.id) as totalComments, " +
             "CASE WHEN COUNT(DISTINCT al.id) > 0 THEN true ELSE false END as likedByUser, " +
-            "GROUP_CONCAT(i.url SEPARATOR ', ') as images " +
+            "u.username, u.profile_picture as profilePicture, " +
+            "GROUP_CONCAT(DISTINCT i.url SEPARATOR ', ') as images " +
             "FROM post p " +
+            "LEFT JOIN user u on u.id = p.user_id " +
             "LEFT JOIN post_like l ON l.post_id = p.id " +
             "LEFT JOIN comment c ON c.post_id = p.id " +
             "LEFT JOIN post_like al ON al.post_id = p.id AND al.user_id = :userId " +
             "LEFT JOIN image i ON i.post_id = p.id " +
-            "GROUP BY p.id, p.content, p.created_at",
+            "GROUP BY p.id, p.content, p.created_at " +
+            "ORDER BY p.id desc ",
+            nativeQuery = true)
+    Optional<List<PostResponse>> getAllPost(Long userId);
+
+    @Query(value = "SELECT p.id as postId, p.content as content, p.created_at as createdAt, " +
+            "COUNT(DISTINCT l.id) as totalLikes, COUNT(DISTINCT c.id) as totalComments, " +
+            "CASE WHEN COUNT(DISTINCT al.id) > 0 THEN true ELSE false END as likedByUser, " +
+            "u.username, u.profile_picture as profilePicture, " +
+            "GROUP_CONCAT(DISTINCT i.url SEPARATOR ', ') as images " +
+            "FROM post p " +
+            "LEFT JOIN user u on u.id = p.user_id " +
+            "LEFT JOIN post_like l ON l.post_id = p.id " +
+            "LEFT JOIN comment c ON c.post_id = p.id " +
+            "LEFT JOIN post_like al ON al.post_id = p.id AND al.user_id = :userId " +
+            "LEFT JOIN image i ON i.post_id = p.id " +
+            "WHERE p.user_id = :userId " +
+            "GROUP BY p.id, p.content, p.created_at " +
+            "ORDER BY p.id desc ",
             nativeQuery = true)
     Optional<List<PostResponse>> findPost(Long userId);
 
@@ -34,14 +55,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = "SELECT p.id as postId, p.content as content, p.created_at as createdAt, " +
             "COUNT(DISTINCT l.id) as totalLikes, COUNT(DISTINCT c.id) as totalComments, " +
             "CASE WHEN COUNT(DISTINCT al.id) > 0 THEN true ELSE false END as likedByUser, " +
-            "GROUP_CONCAT(i.url SEPARATOR ', ') as images " +
+            "u.username, u.profile_picture as profilePicture, " +
+            "GROUP_CONCAT(DISTINCT i.url SEPARATOR ', ') as images " +
             "FROM post p " +
+            "LEFT JOIN user u on u.id = p.user_id " +
             "LEFT JOIN post_like l ON l.post_id = p.id " +
             "LEFT JOIN comment c ON c.post_id = p.id " +
             "LEFT JOIN post_like al ON al.post_id = p.id AND al.user_id = :userId " +
             "LEFT JOIN image i ON i.post_id = p.id " +
             "WHERE p.id = :postId " +
-            "GROUP BY p.id, p.content, p.created_at",
+            "GROUP BY p.id, p.content, p.created_at " +
+            "ORDER BY p.id desc ",
             nativeQuery = true)
     Optional<PostResponse> findPost(Long userId, Long postId);
 }

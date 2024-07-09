@@ -7,6 +7,8 @@ public class RegisterUserDto {
     
     private String fullName;
 
+    private String role;
+
     private String profilePicture;
 
     public String getUsername() {
@@ -39,5 +41,13 @@ public class RegisterUserDto {
 
     public void setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

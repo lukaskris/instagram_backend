@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PostService {
@@ -19,9 +18,14 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public List<PostResponse> getAllPostsAdmin(Long userId) {
+        return postRepository.getAllPost(userId).orElseThrow(() -> new RuntimeException("Post not found"));
+    }
+
     public List<PostResponse> getAllPosts(Long userId) {
         return postRepository.findPost(userId).orElseThrow(() -> new RuntimeException("Post not found"));
     }
+
 
     public PostResponse getPostById(Long userId, Long id) {
         return postRepository.findPost(userId, id).orElse(null);

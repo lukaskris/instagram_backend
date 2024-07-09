@@ -25,7 +25,7 @@ public class User implements UserDetails {
     private String password;
     @Column(name = "profile_picture", length = 255)
     private String profilePicture;
-
+    private String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -95,6 +95,15 @@ public class User implements UserDetails {
 
     public User setProfilePicture(String profilePicture) {
         this.profilePicture = profilePicture;
+        return this;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public User setRole(String role) {
+        this.role = role;
         return this;
     }
 }

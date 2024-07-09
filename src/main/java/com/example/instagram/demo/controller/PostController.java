@@ -9,6 +9,7 @@ import com.example.instagram.demo.service.FileStorageService;
 import com.example.instagram.demo.service.JwtService;
 import com.example.instagram.demo.service.PostService;
 import com.example.instagram.demo.service.UserService;
+import com.example.instagram.demo.utils.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,7 @@ public class PostController {
 
         Post post = new Post();
         post.setUser(user);
+        post.setUsername(user.getUsername());
         post.setContent(content);
 
         List<Image> imageEntities = new ArrayList<>();
@@ -61,7 +63,12 @@ public class PostController {
     public ApiResponse<List<PostResponse>> getAllPosts(@RequestHeader("Authorization") String token) {
         String username = jwtService.extractUsername(token.replace("Bearer ", ""));
         User user = userService.getUserByUsername(username);
-        List<PostResponse> postResponse = postService.getAllPosts(user.getId());
+        List<PostResponse> postResponse;
+        if (user.getRole().equals(Role.ADMIN)) {
+            postResponse = postService.getAllPostsAdmin(user.getId());
+        } else {
+            postResponse = postService.getAllPosts(user.getId());
+        }
         ApiResponse<List<PostResponse>> response = new ApiResponse<>("", postResponse);
         return response;
     }
